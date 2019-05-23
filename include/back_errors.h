@@ -20,12 +20,23 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef BACKPROPAGATION_H_
-#define BACKPROPAGATION_H_
+#ifndef BACK_ERRORS_H_
+#define BACK_ERRORS_H_
 
-#include <math.h>
+#define TOO_MUCH_LAYERS "Too much layers in the networks, cannot add more."
 
-typedef struct network network_t;
-typedef struct layer layer_t;
+#define NEGATIVE_NEURONS "Layers must have 1 or more neurons."
+#define TOO_MUCH_NEURONS "You have too much neurons in this layers."
 
-#endif /* !BACKPROPAGATION_H_ */
+#define MALLOC_FAILED "No memory."
+
+
+/*
+** errors.c
+*/
+
+void error_msg(char const *strerr);
+void *error_ptr(char const *strerr);
+int error_int(char const *strerr);
+
+#endif /* !BACK_ERRORS_H_ */

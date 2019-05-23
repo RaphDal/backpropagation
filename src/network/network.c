@@ -20,12 +20,35 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef BACKPROPAGATION_H_
-#define BACKPROPAGATION_H_
+#include <stdlib.h>
+#include <string.h>
+#include "network.h"
+#include "layer.h"
+#include "back_errors.h"
 
-#include <math.h>
+network_t *network_create(void)
+{
+    network_t *network = malloc(sizeof(network_t));
 
-typedef struct network network_t;
-typedef struct layer layer_t;
+    if (!network)
+        return (error_ptr(MALLOC_FAILED));
+    network->layers = calloc(limit_layers, sizeof(layer_t *));
+    if (!network->layers) {
+        free(network);
+        return (error_ptr(MALLOC_FAILED));
+    }
+    network->nb_layers = 0;
+    network->input = NULL;
+    network->output = NULL;
+    return (network);
+}
 
-#endif /* !BACKPROPAGATION_H_ */
+void network_destroy(network_t *network)
+{
+    if (!network)
+        return;
+    for (size_t i = 0; i < network->nb_layers; i++)
+        layer_destroy(network->layers[i]);
+    free(network->layers);
+    free(network);
+}

@@ -20,4 +20,34 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
+#include <stdlib.h>
+#include <unistd.h>
+#include "layer.h"
+#include "back_errors.h"
+#include "matrix.h"
 
+layer_t *layer_create(size_t neurons)
+{
+    layer_t *layer;
+
+    if (!neurons)
+        return (error_ptr(NEGATIVE_NEURONS));
+    if (neurons > limit_neurons)
+        return (error_ptr(TOO_MUCH_NEURONS));
+    layer = malloc(sizeof(layer_t));
+    if (!layer)
+        return (error_ptr(MALLOC_FAILED));
+    layer->theta = NULL;
+    layer->values = zeros(neurons, 1);
+    layer->bias = 0;
+    return (layer);
+}
+
+void layer_destroy(layer_t *layer)
+{
+    if (!layer)
+        return;
+    matrix_destroy(layer->values);
+    matrix_destroy(layer->theta);
+    free(layer);
+}

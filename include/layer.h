@@ -23,9 +23,27 @@
 #ifndef LAYER_H_
 #define LAYER_H_
 
+#include <unistd.h>
+#include "backpropagation.h"
+#include "matrix.h"
+
+static const size_t limit_neurons = 65536;
+
 struct layer
 {
+    float bias;
 
+    matrix_t *theta;
+
+    matrix_t *values;
 };
+
+
+/*
+** layer.c
+*/
+
+layer_t *layer_create(size_t neurons);
+void layer_destroy(layer_t *layer);
 
 #endif /* !LAYER_H_ */

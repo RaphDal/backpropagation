@@ -20,12 +20,21 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef BACKPROPAGATION_H_
-#define BACKPROPAGATION_H_
+#include <stdio.h>
 
-#include <math.h>
+void error_msg(char const *strerr)
+{
+    fprintf(stderr, "%s\n", strerr);
+}
 
-typedef struct network network_t;
-typedef struct layer layer_t;
+void *error_ptr(char const *strerr)
+{
+    error_msg(strerr);
+    return (NULL);
+}
 
-#endif /* !BACKPROPAGATION_H_ */
+int error_int(char const *strerr)
+{
+    error_msg(strerr);
+    return (-1);
+}

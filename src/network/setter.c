@@ -20,12 +20,24 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef BACKPROPAGATION_H_
-#define BACKPROPAGATION_H_
+#include "network.h"
+#include "layer.h"
+#include "back_errors.h"
 
-#include <math.h>
+int network_add(network_t *network, size_t neurons)
+{
+    layer_t *layer;
 
-typedef struct network network_t;
-typedef struct layer layer_t;
-
-#endif /* !BACKPROPAGATION_H_ */
+    if (!network)
+        return (-1);
+    if (network->nb_layers == limit_layers)
+        return (error_int(TOO_MUCH_LAYERS));
+    if (!(layer = layer_create(neurons)))
+        return (-1);
+    network->layers[network->nb_layers] = layer;
+    if (!network->input)
+        network->input = layer;
+    network->output = layer;
+    network->nb_layers++;
+    return (0);
+}
