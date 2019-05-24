@@ -42,4 +42,6 @@ void layer_forward(layer_t *minus, layer_t *layer)
     if (!minus || !layer)
         return;
     this_matrix_mul(layer->values, minus->values, minus->theta);
+    matrix_sigmoid(layer->values);
+    layer->values->matrix[0][layer->values->cols - 1] = 1;
 }
