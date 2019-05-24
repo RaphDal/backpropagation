@@ -14,32 +14,24 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 //  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#include "network.h"
 #include "layer.h"
 #include "back_errors.h"
 
-int network_add(network_t *network, size_t neurons)
+int layer_connect(layer_t *src, layer_t *dst)
 {
-    layer_t *layer;
+    matrix_t *matrix;
 
-    if (!network)
+    if (!src || !dst)
         return (-1);
-    if (network->nb_layers == limit_layers)
-        return (error_int(TOO_MUCH_LAYERS));
-    if (!(layer = layer_create(neurons)))
-        return (-1);
-    network->layers[network->nb_layers] = layer;
-    if (!network->input)
-        network->input = layer;
-    if (network->output)
-        layer_connect(network->output, layer);
-    network->output = layer;
-    network->nb_layers++;
+    matrix = zeros(src->values->cols, dst->values->cols);
+    if (!matrix)
+        return (error_int(MALLOC_FAILED));
+    src->theta = matrix;
     return (0);
 }

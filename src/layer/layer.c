@@ -38,7 +38,7 @@ layer_t *layer_create(size_t neurons)
     if (!layer)
         return (error_ptr(MALLOC_FAILED));
     layer->theta = NULL;
-    layer->values = zeros(neurons + 1, 1);
+    layer->values = zeros(1, neurons + 1);
     return (layer);
 }
 

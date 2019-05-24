@@ -44,4 +44,11 @@ struct layer
 layer_t *layer_create(size_t neurons);
 void layer_destroy(layer_t *layer);
 
+
+/*
+** connect.c
+*/
+
+int layer_connect(layer_t *src, layer_t *dst);
+
 #endif /* !LAYER_H_ */
