@@ -20,11 +20,19 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef BACKPROPAGATION_H_
-#define BACKPROPAGATION_H_
-
-#include <math.h>
 #include "network.h"
-#include "layer.h"
 
-#endif /* !BACKPROPAGATION_H_ */
+void network_forward(network_t *network)
+{
+    for (size_t i = 1; i < network->nb_layers; i++)
+        layer_forward(network->layers[i - 1], network->layers[i]);
+}
+
+float *network_predict(network_t *network, float *data)
+{
+    if (!network || !network->input)
+        return (NULL);
+    layer_fill(network->input, data);
+    network_forward(network);
+    return (layer_get(network->output));
+}

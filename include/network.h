@@ -24,11 +24,11 @@
 #define NETWORK_H_
 
 #include <unistd.h>
-#include "backpropagation.h"
+#include "layer.h"
 
 static const size_t limit_layers = 256;
 
-struct network
+typedef struct network
 {
     size_t nb_layers;
 
@@ -36,7 +36,7 @@ struct network
 
     layer_t *input;
     layer_t *output;
-};
+} network_t;
 
 
 /*
@@ -53,4 +53,10 @@ void network_destroy(network_t *network);
 
 int network_add(network_t *network, size_t neurons);
 
+
+/*
+** launch.c
+*/
+
+float *network_predict(network_t *network, float *data);
 #endif /* !NETWORK_H_ */

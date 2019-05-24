@@ -29,7 +29,7 @@ int layer_connect(layer_t *src, layer_t *dst)
 
     if (!src || !dst)
         return (-1);
-    matrix = zeros(src->values->cols, dst->values->cols);
+    matrix = custom(src->values->cols, dst->values->cols - 1, 0);
     if (!matrix)
         return (error_int(MALLOC_FAILED));
     src->theta = matrix;

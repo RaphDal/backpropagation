@@ -24,5 +24,16 @@
 
 int main(void)
 {
+    network_t *network = network_create();
+
+    network_add(network, 6);
+    network_add(network, 5);
+
+    float input[] = {1, 2, 3, 4, 5, 6};
+    float *res = network_predict(network, input);
+    for (size_t i = 0; i < 5; i++)
+        printf("% .2f ", res[i]);
+    printf("\n");
+    
     return (0);
 }

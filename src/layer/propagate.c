@@ -41,5 +41,5 @@ void layer_forward(layer_t *minus, layer_t *layer)
 
     if (!minus || !layer)
         return;
-    res = matrix_mul(minus->values, minus->theta);
+    this_matrix_mul(layer->values, minus->values, minus->theta);
 }

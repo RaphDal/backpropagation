@@ -24,17 +24,16 @@
 #define LAYER_H_
 
 #include <unistd.h>
-#include "backpropagation.h"
 #include "matrix.h"
 
 static const size_t limit_neurons = 65536;
 
-struct layer
+typedef struct layer
 {
     matrix_t *theta;
 
     matrix_t *values;
-};
+} layer_t;
 
 
 /*
@@ -43,6 +42,8 @@ struct layer
 
 layer_t *layer_create(size_t neurons);
 void layer_destroy(layer_t *layer);
+void layer_fill(layer_t *layer, float *data);
+float *layer_get(layer_t *layer);
 
 
 /*
@@ -50,5 +51,12 @@ void layer_destroy(layer_t *layer);
 */
 
 int layer_connect(layer_t *src, layer_t *dst);
+
+
+/*
+** propagate.c
+*/
+
+void layer_forward(layer_t *minus, layer_t *layer);
 
 #endif /* !LAYER_H_ */
