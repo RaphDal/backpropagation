@@ -32,14 +32,13 @@ layer_t *layer_create(size_t neurons)
 
     if (!neurons)
         return (error_ptr(NEGATIVE_NEURONS));
-    if (neurons > limit_neurons)
+    if (neurons >= limit_neurons)
         return (error_ptr(TOO_MUCH_NEURONS));
     layer = malloc(sizeof(layer_t));
     if (!layer)
         return (error_ptr(MALLOC_FAILED));
     layer->theta = NULL;
-    layer->values = zeros(neurons, 1);
-    layer->bias = 0;
+    layer->values = zeros(neurons + 1, 1);
     return (layer);
 }
 

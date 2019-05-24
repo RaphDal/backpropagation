@@ -31,8 +31,6 @@ static const size_t limit_neurons = 65536;
 
 struct layer
 {
-    float bias;
-
     matrix_t *theta;
 
     matrix_t *values;
