@@ -37,8 +37,10 @@ int network_add(network_t *network, size_t neurons)
     network->layers[network->nb_layers] = layer;
     if (!network->input)
         network->input = layer;
-    if (network->output)
+    if (network->output) {
         layer_connect(network->output, layer);
+        layer_init_matrix(network->output, network->epsylon);
+    }
     network->output = layer;
     network->nb_layers++;
     return (0);

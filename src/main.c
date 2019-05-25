@@ -21,19 +21,25 @@
 //  DEALINGS IN THE SOFTWARE.
 
 #include "backpropagation.h"
-
+#include <unistd.h>
 int main(void)
 {
     network_t *network = network_create();
 
     network_add(network, 6);
+    network_add(network, 8);
     network_add(network, 5);
 
-    float input[] = {1, 2, 3, 4, 5, 6};
-    float *res = network_predict(network, input);
+    float **inputs = malloc(sizeof(float *) * 1);
+    inputs[0] = malloc(sizeof(float) * 6);
+    for (size_t i = 0; i < 6; i++)
+        inputs[0][i] = i;
+    float **outputs = malloc(sizeof(float *) * 1);
+    outputs[0] = malloc(sizeof(float) * 5);
     for (size_t i = 0; i < 5; i++)
-        printf("% .2f ", res[i]);
-    printf("\n");
+        outputs[0][i] = i;
+
+    network_train(network, inputs, outputs, 1);
     
     return (0);
 }

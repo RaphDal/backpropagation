@@ -30,6 +30,8 @@ static const size_t limit_layers = 256;
 
 typedef struct network
 {
+    float epsylon;
+
     size_t nb_layers;
 
     layer_t **layers;
@@ -59,4 +61,6 @@ int network_add(network_t *network, size_t neurons);
 */
 
 float *network_predict(network_t *network, float *data);
+void network_train(network_t *network, float **inputs,
+float **expecteds, size_t data_size);
 #endif /* !NETWORK_H_ */

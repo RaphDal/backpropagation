@@ -32,7 +32,12 @@ typedef struct layer
 {
     matrix_t *theta;
 
+    float *bias;
+    matrix_t *z;
     matrix_t *values;
+
+    matrix_t *delta;
+    matrix_t *sum_delta;
 } layer_t;
 
 
@@ -44,6 +49,7 @@ layer_t *layer_create(size_t neurons);
 void layer_destroy(layer_t *layer);
 void layer_fill(layer_t *layer, float *data);
 float *layer_get(layer_t *layer);
+void layer_set_error(layer_t *layer, float *expected);
 
 
 /*
@@ -51,6 +57,7 @@ float *layer_get(layer_t *layer);
 */
 
 int layer_connect(layer_t *src, layer_t *dst);
+void layer_init_matrix(layer_t *layer, float epsylon);
 
 
 /*
@@ -58,5 +65,7 @@ int layer_connect(layer_t *src, layer_t *dst);
 */
 
 void layer_forward(layer_t *minus, layer_t *layer);
+void layer_backward(layer_t *layer, layer_t *plus);
+void layer_reset_errors(layer_t *layer);
 
 #endif /* !LAYER_H_ */

@@ -20,6 +20,7 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
+#include <math.h>
 #include "layer.h"
 
 
@@ -37,11 +38,33 @@
 
 void layer_forward(layer_t *minus, layer_t *layer)
 {
-    matrix_t *res;
-
     if (!minus || !layer)
         return;
-    this_matrix_mul(layer->values, minus->values, minus->theta);
-    matrix_sigmoid(layer->values);
-    layer->values->matrix[0][layer->values->cols - 1] = 1;
+    this_matrix_mul(layer->z, minus->theta, minus->values);
+    for (size_t i = 0; i < layer->z->rows; i++)
+        layer->z->matrix[i][0] += layer->bias[i];
+    this_matrix_sigmoid(layer->values, layer->z);
+}
+
+void layer_backward(layer_t *layer, layer_t *plus)
+{
+    matrix_t *transposed_a = matrix_transpose(layer->values);
+    matrix_t *time;
+    float sig;
+
+    this_matrix_mul_transposed(layer->delta, layer->theta, plus->delta);
+    for (size_t i = 0; i < layer->delta->rows; i++) {
+        sig = 1 / (1 + expf(-layer->z->matrix[i][0]));
+        layer->delta->matrix[i][0] *= sig * (1 - sig);
+    }
+    time = matrix_mul(plus->delta, transposed_a);
+    this_matrix_add(layer->sum_delta, layer->sum_delta, time);
+    matrix_destroy(time);
+}
+
+void layer_reset_errors(layer_t *layer)
+{
+    for (size_t i = 0; i < layer->sum_delta->rows; i++)
+        for (size_t j = 0; j < layer->sum_delta->cols; j++)
+            layer->sum_delta->matrix[i][j] = 0;
 }

@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "network.h"
 #include "layer.h"
 #include "back_errors.h"
@@ -32,6 +33,7 @@ network_t *network_create(void)
 
     if (!network)
         return (error_ptr(MALLOC_FAILED));
+    srand(time(NULL));
     network->layers = calloc(limit_layers, sizeof(layer_t *));
     if (!network->layers) {
         free(network);
@@ -40,6 +42,7 @@ network_t *network_create(void)
     network->nb_layers = 0;
     network->input = NULL;
     network->output = NULL;
+    network->epsylon = 1;
     return (network);
 }
 

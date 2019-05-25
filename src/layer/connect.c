@@ -20,8 +20,24 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
+#include <math.h>
 #include "layer.h"
 #include "back_errors.h"
+
+void layer_init_matrix(layer_t *layer, float epsylon)
+{
+    float **matrix = layer->theta->matrix;
+    size_t rows = layer->theta->rows;
+    size_t cols = layer->theta->cols;
+    float max = 0;
+
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < cols; j++) {
+            matrix[i][j] = ((float)(rand()%100))/100 *
+            (2 * epsylon) - epsylon;
+        }
+    }
+}
 
 int layer_connect(layer_t *src, layer_t *dst)
 {
@@ -29,9 +45,10 @@ int layer_connect(layer_t *src, layer_t *dst)
 
     if (!src || !dst)
         return (-1);
-    matrix = custom(src->values->cols, dst->values->cols - 1, 0);
+    matrix = custom(dst->z->rows, src->values->rows, 0);
+    src->sum_delta = zeros(dst->z->rows, src->z->rows);
     if (!matrix)
-        return (error_int(MALLOC_FAILED));
+        return (-1);
     src->theta = matrix;
     return (0);
 }

@@ -28,6 +28,13 @@ void network_forward(network_t *network)
         layer_forward(network->layers[i - 1], network->layers[i]);
 }
 
+void network_backward(network_t *network)
+{
+    ssize_t lim = (ssize_t)network->nb_layers - 2;
+    for (ssize_t i = lim; i >= 0; i--)
+        layer_backward(network->layers[i], network->layers[i + 1]);
+}
+
 float *network_predict(network_t *network, float *data)
 {
     if (!network || !network->input)
@@ -35,4 +42,23 @@ float *network_predict(network_t *network, float *data)
     layer_fill(network->input, data);
     network_forward(network);
     return (layer_get(network->output));
+}
+
+void network_self_train(network_t *network, float *input, float *output)
+{
+    if (!network || !network->input || !network->output)
+        return;
+    layer_fill(network->input, input);
+    network_forward(network);
+    layer_set_error(network->output, output);
+    network_backward(network);
+}
+
+void network_train(network_t *network, float **inputs,
+float **expecteds, size_t data_size)
+{
+    for (size_t i = 0; i < network->nb_layers - 1; i++)
+        layer_reset_errors(network->layers[i]);
+    for (size_t i = 0; i < data_size; i++)
+        network_self_train(network, inputs[i], expecteds[i]);
 }
