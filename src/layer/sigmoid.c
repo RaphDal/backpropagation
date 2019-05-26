@@ -23,22 +23,22 @@
 #include <math.h>
 #include "layer.h"
 
-void layer_forward(layer_t *minus, layer_t *layer)
+static inline float sigmoidf(float z) {return (1 / (1 + expf(-z)));}
+
+void sigmoid(matrix_t *res, matrix_t *matrix)
 {
-    this_matrix_mul(layer->z, minus->theta, minus->values);
-    for (size_t i = 0; i < layer->z->rows; i++)
-        layer->z->matrix[i][0] += layer->bias[i];
-    this_matrix_sigmoid(layer->values, layer->z);
+    for (size_t i = 0; i < matrix->rows; i++)
+        for (size_t j = 0; j < matrix->cols; j++)
+            res->matrix[i][j] = sigmoidf(matrix->matrix[i][j]);
 }
 
-void layer_backward(layer_t *layer, layer_t *plus)
+void sigmoid_gradiant(matrix_t *res, matrix_t *matrix)
 {
-    // WIP
-}
+    float sig;
 
-void layer_reset_errors(layer_t *layer)
-{
-    for (size_t i = 0; i < layer->sum_delta->rows; i++)
-        for (size_t j = 0; j < layer->sum_delta->cols; j++)
-            layer->sum_delta->matrix[i][j] = 0;
+    for (size_t i = 0; i < matrix->rows; i++)
+        for (size_t j = 0; j < matrix->cols; j++) {
+            sig = sigmoidf(matrix->matrix[i][j]);
+            res->matrix[i][j] = sig * (1 - sig);
+        }
 }

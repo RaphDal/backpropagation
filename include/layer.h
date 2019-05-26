@@ -68,4 +68,12 @@ void layer_forward(layer_t *minus, layer_t *layer);
 void layer_backward(layer_t *layer, layer_t *plus);
 void layer_reset_errors(layer_t *layer);
 
+
+/*
+** sigmoid.c
+*/
+
+void sigmoid(matrix_t *res, matrix_t *matrix);
+void sigmoid_gradiant(matrix_t *res, matrix_t *matrix);
+
 #endif /* !LAYER_H_ */
