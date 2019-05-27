@@ -30,7 +30,7 @@ int main(void)
     network_t *network = network_create();
 
     network_add(network, 400);
-    network_add(network, 100);
+    network_add(network, 25);
     network_add(network, 10);
 
     network_train(network, input, expecteds, 50);

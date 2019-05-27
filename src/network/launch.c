@@ -43,8 +43,7 @@ float *network_predict(network_t *network, float *data)
 {
     if (!network || !network->input)
         return (NULL);
-    layer_fill(network->input, data);
-    network_forward(network);
+    network_forward(network, data);
     return (layer_get(network->output));
 }
 
@@ -86,7 +85,7 @@ matrix_t *expected, size_t step)
     }
     for (size_t i = 0; i < network->nb_layers - 1; i++) {
         regul += get_regul_cost(network->layers[i]);
-        apply_gradiant(network->layers[i], 0.01, input->rows);
+        apply_gradiant(network->layers[i], 1, input->rows);
     }
     j += regul * (1 / (2 * m));
     printf("\nFinal cost : %f\n", j);
