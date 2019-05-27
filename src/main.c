@@ -24,31 +24,16 @@
 #include <unistd.h>
 int main(void)
 {
+    matrix_t *input = matrix_import_mat("inputs.mat");
+    matrix_t *expecteds = matrix_import_mat("expecteds.mat");
+
     network_t *network = network_create();
 
-    network_add(network, 6);
-    network_add(network, 8);
-    network_add(network, 5);
+    network_add(network, 400);
+    network_add(network, 100);
+    network_add(network, 10);
 
-    float **inputs = malloc(sizeof(float *) * 1);
-    inputs[0] = malloc(sizeof(float) * 6);
-    for (size_t i = 0; i < 6; i++)
-        inputs[0][i] = i;
-    float **outputs = malloc(sizeof(float *) * 1);
-    outputs[0] = malloc(sizeof(float) * 5);
-    for (size_t i = 0; i < 5; i++)
-        outputs[0][i] = i;
-
-    float *input = malloc(sizeof(float) * 6);
-    input[0] = 0.5;
-    input[1] = 0.25;
-    input[2] = -0.35;
-    input[3] = 0.15;
-    input[4] = -0.5;
-    input[5] = 0;
-
-    //network_predict(network, input);
-    network_train(network, inputs, outputs, 1);
+    network_train(network, input, expecteds, 50);
     
     return (0);
 }

@@ -83,6 +83,7 @@ void sigmoid_gradiant(matrix_t *res, matrix_t *matrix);
 */
 
 float get_regul_cost(layer_t * layer);
+void apply_gradiant(layer_t *layer, float lambda, float m);
 
 
 #endif /* !LAYER_H_ */

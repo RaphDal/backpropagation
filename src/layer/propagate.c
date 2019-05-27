@@ -29,7 +29,6 @@ void layer_forward(layer_t *minus, layer_t *layer)
     layer->a->cols--;
     this_matrix_sigmoid(layer->a, layer->z);
     layer->a->cols++;
-    matrix_display(layer->a);
 }
 
 void layer_backward(layer_t *layer, layer_t *plus)

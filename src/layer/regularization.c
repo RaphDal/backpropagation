@@ -20,6 +20,7 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
+#include <math.h>
 #include "layer.h"
 
 float get_regul_cost(layer_t * layer)
@@ -31,4 +32,17 @@ float get_regul_cost(layer_t * layer)
         for (size_t j = 0; j < theta->cols - 1; j++)
             res += theta->matrix[i][j] * theta->matrix[i][j];
     return (res);
+}
+
+void apply_gradiant(layer_t *layer, float lambda, float m)
+{
+    matrix_t *theta = layer->theta;
+    matrix_t *grad = layer->gradiant;
+    float tot = 0;
+
+    for (size_t i = 0; i < grad->rows; i++)
+        for (size_t j = 0; j < grad->cols; j++) {
+            theta->matrix[i][j] -= (grad->matrix[i][j]/m) * lambda;
+            tot += fabs((grad->matrix[i][j]/m) * lambda);
+        }
 }
