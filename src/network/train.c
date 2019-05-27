@@ -65,7 +65,7 @@ matrix_t *expected, size_t step)
     for (size_t i = 0; i < m; i++) {
         if ((i+1)%((int)(m / 100)) == 0) {
             buff[(int)(((i+1) * 100) / m) - 1] = '|';
-            printf("[%-100s %lu/%lu (%f)\r", buff, i+1, input->rows, j);
+            printf("[%-100s] %lu/%lu (%f)\r", buff, i+1, input->rows, j);
         }
         j += network_self_train(network, input->matrix[i],
         expected->matrix[i], input->rows);
