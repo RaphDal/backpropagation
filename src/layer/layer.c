@@ -38,10 +38,12 @@ layer_t *layer_create(size_t neurons)
     if (!layer)
         return (error_ptr(MALLOC_FAILED));
     layer->theta = NULL;
-    layer->values = zeros(neurons, 1);
-    layer->delta = zeros(neurons, 1);
-    layer->z = zeros(neurons, 1);
-    layer->bias = calloc(sizeof(float), neurons);
+    layer->gradiant = NULL;
+    layer->delta = zeros(neurons + 1, 1);
+    layer->delta->rows--;
+    layer->z = zeros(1, neurons);
+    layer->a = custom(1, neurons + 1, 1);
+    layer->neurons = neurons;
     return (layer);
 }
 
@@ -49,15 +51,18 @@ void layer_destroy(layer_t *layer)
 {
     if (!layer)
         return;
-    matrix_destroy(layer->values);
+    matrix_destroy(layer->delta);
     matrix_destroy(layer->theta);
+    matrix_destroy(layer->a);
+    matrix_destroy(layer->z);
+    matrix_destroy(layer->gradiant);
     free(layer);
 }
 
 void layer_fill(layer_t *layer, float *data)
 {
-    for (size_t i = 0; i < layer->z->rows; i++)
-        layer->values->matrix[i][0] = data[i];
+    for (size_t i = 0; i < layer->neurons; i++)
+        layer->a->matrix[0][i] = data[i];
 }
 
 float *layer_get(layer_t *layer)
@@ -66,15 +71,15 @@ float *layer_get(layer_t *layer)
 
     if (!layer)
         return (NULL);
-    if (!(res = malloc(sizeof(float) * (layer->values->rows - 1))))
+    if (!(res = malloc(sizeof(float) * (layer->neurons))))
         return (NULL);
-    for (size_t i = 0; i < layer->values->rows - 1; i++)
-        res[i] = layer->values->matrix[i][0];
+    for (size_t i = 0; i < layer->neurons; i++)
+        res[i] = layer->a->matrix[0][i];
     return (res);
 }
 
 void layer_set_error(layer_t *layer, float *expected)
 {
-    for (size_t i = 0; i < layer->delta->rows; i++)
-        layer->delta->matrix[i][0] = layer->values->matrix[i][0] - expected[i];
+    for (size_t i = 0; i < layer->neurons; i++)
+        layer->delta->matrix[i][0] = layer->a->matrix[0][i] - expected[i];
 }

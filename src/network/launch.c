@@ -31,8 +31,9 @@ void network_forward(network_t *network)
 void network_backward(network_t *network)
 {
     ssize_t lim = (ssize_t)network->nb_layers - 2;
-    for (ssize_t i = lim; i >= 0; i--)
+    for (ssize_t i = lim; i >= 0; i--) {
         layer_backward(network->layers[i], network->layers[i + 1]);
+    }
 }
 
 float *network_predict(network_t *network, float *data)
@@ -44,21 +45,31 @@ float *network_predict(network_t *network, float *data)
     return (layer_get(network->output));
 }
 
-void network_self_train(network_t *network, float *input, float *output)
+float network_self_train(network_t *network, float *input, float *output)
 {
+    float cost = 0;
+
     if (!network || !network->input || !network->output)
-        return;
+        return (-1);
     layer_fill(network->input, input);
     network_forward(network);
     layer_set_error(network->output, output);
     network_backward(network);
+    return (cost);
 }
 
 void network_train(network_t *network, float **inputs,
 float **expecteds, size_t data_size)
 {
+    float j = 0;
+    float regul = 0;
+
     for (size_t i = 0; i < network->nb_layers - 1; i++)
         layer_reset_errors(network->layers[i]);
     for (size_t i = 0; i < data_size; i++)
-        network_self_train(network, inputs[i], expecteds[i]);
+        j += network_self_train(network, inputs[i], expecteds[i]);
+    for (size_t i = 0; i < network->nb_layers - 1; i++)
+        regul += get_regul_cost(network->layers[i]);
+    j += regul * (1 / (2 * (float)data_size));
+    printf("J(O) : %f\n", j);
 }

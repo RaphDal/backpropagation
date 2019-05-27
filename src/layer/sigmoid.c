@@ -39,6 +39,6 @@ void sigmoid_gradiant(matrix_t *res, matrix_t *matrix)
     for (size_t i = 0; i < matrix->rows; i++)
         for (size_t j = 0; j < matrix->cols; j++) {
             sig = sigmoidf(matrix->matrix[i][j]);
-            res->matrix[i][j] = sig * (1 - sig);
+            res->matrix[i][j] *= sig * (1 - sig);
         }
 }

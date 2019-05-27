@@ -39,6 +39,15 @@ int main(void)
     for (size_t i = 0; i < 5; i++)
         outputs[0][i] = i;
 
+    float *input = malloc(sizeof(float) * 6);
+    input[0] = 0.5;
+    input[1] = 0.25;
+    input[2] = -0.35;
+    input[3] = 0.15;
+    input[4] = -0.5;
+    input[5] = 0;
+
+    //network_predict(network, input);
     network_train(network, inputs, outputs, 1);
     
     return (0);

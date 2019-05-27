@@ -45,10 +45,11 @@ int layer_connect(layer_t *src, layer_t *dst)
 
     if (!src || !dst)
         return (-1);
-    matrix = custom(dst->z->rows, src->values->rows, 0);
-    src->sum_delta = zeros(dst->z->rows, src->z->rows);
+    matrix = custom(dst->z->cols, src->a->cols, 0);
     if (!matrix)
         return (-1);
     src->theta = matrix;
+    if (!(src->gradiant = matrix_copy(matrix)))
+        return (-1);
     return (0);
 }

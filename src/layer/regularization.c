@@ -20,69 +20,15 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#ifndef LAYER_H_
-#define LAYER_H_
+#include "layer.h"
 
-#include <unistd.h>
-#include "matrix.h"
-
-static const size_t limit_neurons = 65536;
-
-typedef struct layer
+float get_regul_cost(layer_t * layer)
 {
-    matrix_t *theta;
+    matrix_t *theta = layer->theta;
+    float res = 0;
 
-    matrix_t *z;
-    matrix_t *a;
-
-    matrix_t *delta;
-    matrix_t *gradiant;
-
-    size_t neurons;
-} layer_t;
-
-
-/*
-** layer.c
-*/
-
-layer_t *layer_create(size_t neurons);
-void layer_destroy(layer_t *layer);
-void layer_fill(layer_t *layer, float *data);
-float *layer_get(layer_t *layer);
-void layer_set_error(layer_t *layer, float *expected);
-
-
-/*
-** connect.c
-*/
-
-int layer_connect(layer_t *src, layer_t *dst);
-void layer_init_matrix(layer_t *layer, float epsylon);
-
-
-/*
-** propagate.c
-*/
-
-void layer_forward(layer_t *minus, layer_t *layer);
-void layer_backward(layer_t *layer, layer_t *plus);
-void layer_reset_errors(layer_t *layer);
-
-
-/*
-** sigmoid.c
-*/
-
-void sigmoid(matrix_t *res, matrix_t *matrix);
-void sigmoid_gradiant(matrix_t *res, matrix_t *matrix);
-
-
-/*
-** regularization.c
-*/
-
-float get_regul_cost(layer_t * layer);
-
-
-#endif /* !LAYER_H_ */
+    for (size_t i = 0; i < theta->rows; i++)
+        for (size_t j = 0; j < theta->cols - 1; j++)
+            res += theta->matrix[i][j] * theta->matrix[i][j];
+    return (res);
+}
