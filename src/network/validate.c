@@ -20,22 +20,38 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#include "backpropagation.h"
-#include <unistd.h>
-int main(void)
+#include "network.h"
+
+void max_vector(float *vec, size_t size, size_t *index)
 {
-    matrix_t *input = matrix_import_mat("inputs.mat");
-    matrix_t *expecteds = matrix_import_mat("expecteds.mat");
+    float max = -1;
 
-    network_t *network = network_create();
+    for (size_t i = 0; i < size; i++)
+        if (vec[i] > max) {
+            *index = i;
+            max = vec[i];
+        }
+}
 
-    network_add(network, 400);
-    network_add(network, 25);
-    network_add(network, 10);
+int verify(network_t *network, float *input, float *expected)
+{
+    float *out = network_predict(network, input);
+    size_t index_expected;
+    size_t index_output;
 
-    validate(network, input, expecteds);
-    network_train(network, input, expecteds, 50);
-    validate(network, input, expecteds);
-    
-    return (0);
+    max_vector(out, network->output->neurons, &index_output);
+    max_vector(expected, network->output->neurons, &index_expected);
+    return (index_expected == index_output);
+}
+
+void validate(network_t *network, matrix_t *input,
+matrix_t *expected)
+{
+    float m = input->rows;
+    int score = 0;
+
+    for (size_t t = 0; t < input->rows; t++) {
+        score += verify(network, input->matrix[t], expected->matrix[t]);
+    }
+    printf("Result : %d/%lu\n", score, input->rows);
 }

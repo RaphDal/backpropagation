@@ -63,5 +63,7 @@ int network_add(network_t *network, size_t neurons);
 float *network_predict(network_t *network, float *data);
 void network_train(network_t *network, matrix_t *input,
 matrix_t *expected, size_t epochs);
+void validate(network_t *network, matrix_t *input,
+matrix_t *expected);
 
 #endif /* !NETWORK_H_ */

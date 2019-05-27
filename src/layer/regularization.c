@@ -47,9 +47,10 @@ void apply_gradiant(layer_t *layer, float lambda, float m)
 {
     matrix_t *theta = layer->theta;
     matrix_t *grad = layer->gradiant;
+    float coef = lambda / m;
 
     update_grad_by_theta(grad, theta, 1, m);
     for (size_t i = 0; i < grad->rows; i++)
         for (size_t j = 0; j < grad->cols; j++)
-            theta->matrix[i][j] -= (grad->matrix[i][j]/m) * lambda;
+            theta->matrix[i][j] -= coef * grad->matrix[i][j];
 }

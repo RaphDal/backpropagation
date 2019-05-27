@@ -23,12 +23,7 @@
 #include <math.h>
 #include "network.h"
 
-void network_forward(network_t *network, float *input)
-{
-    layer_fill(network->input, input);
-    for (size_t i = 1; i < network->nb_layers; i++)
-        layer_forward(network->layers[i - 1], network->layers[i]);
-}
+void network_forward(network_t *network, float *input);
 
 void network_backward(network_t *network, float *expected)
 {
@@ -37,14 +32,6 @@ void network_backward(network_t *network, float *expected)
     layer_set_error(network->output, expected);
     for (ssize_t i = lim; i >= 0; i--)
         layer_backward(network->layers[i], network->layers[i + 1]);
-}
-
-float *network_predict(network_t *network, float *data)
-{
-    if (!network || !network->input)
-        return (NULL);
-    network_forward(network, data);
-    return (layer_get(network->output));
 }
 
 float network_self_train(network_t *network, float *input, float *output,
@@ -78,7 +65,7 @@ matrix_t *expected, size_t step)
     for (size_t i = 0; i < m; i++) {
         if ((i+1)%((int)(m / 100)) == 0) {
             buff[(int)(((i+1) * 100) / m) - 1] = '|';
-            printf("[%-100s] %lu/%lu (%f)\r", buff, i+1, input->rows, j);
+            printf("[%-100s %lu/%lu (%f)\r", buff, i+1, input->rows, j);
         }
         j += network_self_train(network, input->matrix[i],
         expected->matrix[i], input->rows);

@@ -20,22 +20,20 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //  DEALINGS IN THE SOFTWARE.
 
-#include "backpropagation.h"
-#include <unistd.h>
-int main(void)
+#include <math.h>
+#include "network.h"
+
+void network_forward(network_t *network, float *input)
 {
-    matrix_t *input = matrix_import_mat("inputs.mat");
-    matrix_t *expecteds = matrix_import_mat("expecteds.mat");
+    layer_fill(network->input, input);
+    for (size_t i = 1; i < network->nb_layers; i++)
+        layer_forward(network->layers[i - 1], network->layers[i]);
+}
 
-    network_t *network = network_create();
-
-    network_add(network, 400);
-    network_add(network, 25);
-    network_add(network, 10);
-
-    validate(network, input, expecteds);
-    network_train(network, input, expecteds, 50);
-    validate(network, input, expecteds);
-    
-    return (0);
+float *network_predict(network_t *network, float *data)
+{
+    if (!network || !network->input)
+        return (NULL);
+    network_forward(network, data);
+    return (layer_get(network->output));
 }
