@@ -34,15 +34,22 @@ float get_regul_cost(layer_t * layer)
     return (res);
 }
 
+void update_grad_by_theta(matrix_t *grad, matrix_t *theta, float lambda, float m)
+{
+    float imp = lambda / m;
+
+    for (size_t i = 0; i < theta->rows; i++)
+        for (size_t j = 0; j < theta->cols - 1; j++)
+            grad->matrix[i][j] += imp * theta->matrix[i][j];
+}
+
 void apply_gradiant(layer_t *layer, float lambda, float m)
 {
     matrix_t *theta = layer->theta;
     matrix_t *grad = layer->gradiant;
-    float tot = 0;
 
+    update_grad_by_theta(grad, theta, 1, m);
     for (size_t i = 0; i < grad->rows; i++)
-        for (size_t j = 0; j < grad->cols; j++) {
+        for (size_t j = 0; j < grad->cols; j++)
             theta->matrix[i][j] -= (grad->matrix[i][j]/m) * lambda;
-            tot += fabs((grad->matrix[i][j]/m) * lambda);
-        }
 }
