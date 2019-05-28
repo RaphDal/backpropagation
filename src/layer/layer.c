@@ -41,6 +41,7 @@ layer_t *layer_create(size_t neurons)
     layer->gradiant = NULL;
     layer->delta = zeros(neurons + 1, 1);
     layer->delta->rows--;
+    layer->delta->matrix++;
     layer->z = zeros(1, neurons);
     layer->a = custom(1, neurons + 1, 1);
     layer->neurons = neurons;
@@ -62,7 +63,7 @@ void layer_destroy(layer_t *layer)
 void layer_fill(layer_t *layer, float *data)
 {
     for (size_t i = 0; i < layer->neurons; i++)
-        layer->a->matrix[0][i] = data[i];
+        layer->a->matrix[0][i + 1] = data[i];
 }
 
 float *layer_get(layer_t *layer)
@@ -74,12 +75,12 @@ float *layer_get(layer_t *layer)
     if (!(res = malloc(sizeof(float) * (layer->neurons))))
         return (NULL);
     for (size_t i = 0; i < layer->neurons; i++)
-        res[i] = layer->a->matrix[0][i];
+        res[i] = layer->a->matrix[0][i + 1];
     return (res);
 }
 
 void layer_set_error(layer_t *layer, float *expected)
 {
     for (size_t i = 0; i < layer->neurons; i++)
-        layer->delta->matrix[i][0] = layer->a->matrix[0][i] - expected[i];
+        layer->delta->matrix[i][0] = layer->a->matrix[0][i + 1] - expected[i];
 }

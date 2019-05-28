@@ -25,16 +25,33 @@
 
 void layer_forward(layer_t *minus, layer_t *layer)
 {
+    float tot = 0;
+
     this_matrix_mul_nt(layer->z, minus->a, minus->theta);
     layer->a->cols--;
+    for (size_t i = 0; i < layer->a->rows; i++)
+        layer->a->matrix[i]++;
     this_matrix_sigmoid(layer->a, layer->z);
     layer->a->cols++;
+    for (size_t i = 0; i < layer->a->rows; i++)
+        layer->a->matrix[i]--;
+    for (size_t i = 0; i < layer->a->cols - 1; i++)
+        tot += layer->a->matrix[0][i];
 }
 
 void layer_backward(layer_t *layer, layer_t *plus)
 {
+    layer->delta->matrix--;
+    layer->delta->rows++;
+
     this_matrix_mul_transposed(layer->delta, layer->theta, plus->delta);
+    
+    layer->delta->matrix++;
+    layer->delta->rows--;
+
+
     sigmoid_gradiant(layer->delta, layer->z);
+
     this_matrix_add_mul(layer->gradiant, plus->delta, layer->a);
 }
 

@@ -41,14 +41,11 @@ size_t training_size)
 
     network_forward(network, input);
     network_backward(network, output);
-    for (size_t j = 0; j < network->output->a->cols - 1; j++)
-        cost += -output[j] * log(network->output->a->matrix[0][j]) - (1 - output[j]) * log(1 - network->output->a->matrix[0][j]);
-    cost /= training_size;
-    if (isinf(cost))
-        return (0);
-    if (isnan(cost))
-        return (0);
-    return (cost);
+    for (size_t j = 0; j < network->output->a->cols - 1; j++) {
+        cost += -output[j] * logf(network->output->a->matrix[0][j + 1]) -
+        (1 - output[j]) * logf(1 - network->output->a->matrix[0][j + 1]);
+    }
+    return (cost / (float)training_size);
 }
 
 void network_epoch(network_t *network, matrix_t *input,
@@ -63,12 +60,12 @@ matrix_t *expected, size_t step)
     for (size_t i = 0; i < network->nb_layers - 1; i++)
         layer_reset_errors(network->layers[i]);
     for (size_t i = 0; i < m; i++) {
-        if ((i+1)%((int)(m / 100)) == 0) {
-            buff[(int)(((i+1) * 100) / m) - 1] = '|';
-            printf("[%-100s] %lu/%lu (%f)\r", buff, i+1, input->rows, j);
-        }
         j += network_self_train(network, input->matrix[i],
         expected->matrix[i], input->rows);
+        if ((i+1)%((int)(m / 100)) == 0) {
+            buff[(int)(((i+1) * 100) / m) - 1] = '|';
+            printf("[%-100s] %lu/%lu - J(θ) = %f\r", buff, i+1, input->rows, j);
+        }
     }
     for (size_t i = 0; i < network->nb_layers - 1; i++) {
         regul += get_regul_cost(network->layers[i]);

@@ -29,7 +29,7 @@ float get_regul_cost(layer_t * layer)
     float res = 0;
 
     for (size_t i = 0; i < theta->rows; i++)
-        for (size_t j = 0; j < theta->cols - 1; j++)
+        for (size_t j = 1; j < theta->cols; j++)
             res += theta->matrix[i][j] * theta->matrix[i][j];
     return (res);
 }
@@ -39,7 +39,7 @@ void update_grad_by_theta(matrix_t *grad, matrix_t *theta, float lambda, float m
     float imp = lambda / m;
 
     for (size_t i = 0; i < theta->rows; i++)
-        for (size_t j = 0; j < theta->cols - 1; j++)
+        for (size_t j = 1; j < theta->cols; j++)
             grad->matrix[i][j] += imp * theta->matrix[i][j];
 }
 
