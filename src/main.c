@@ -33,9 +33,6 @@ int main(void)
     network_add(network, 25);
     network_add(network, 10);
 
-    for (size_t i = 0; i < network->nb_layers - 1; i++)
-        matrix_display(matrix_size(network->layers[i]->theta));
-
 
     /*matrix_t *theta_1 = matrix_import_mat("theta_1");
     network->layers[0]->theta = theta_1;
@@ -44,7 +41,7 @@ int main(void)
     network->layers[1]->theta = theta_2;*/
 
     validate(network, input, expecteds);
-    network_train(network, input, expecteds, 500);
+    network_train(network, input, expecteds, 50);
     validate(network, input, expecteds);
     
     return (0);

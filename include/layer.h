@@ -86,4 +86,11 @@ float get_regul_cost(layer_t * layer);
 void apply_gradiant(layer_t *layer, float lambda, float m);
 
 
+/*
+** draw.c
+*/
+
+void layer_draw(layer_t *layer, char const *filepath);
+
+
 #endif /* !LAYER_H_ */
