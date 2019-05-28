@@ -53,5 +53,5 @@ matrix_t *expected)
     for (size_t t = 0; t < input->rows; t++) {
         score += verify(network, input->matrix[t], expected->matrix[t]);
     }
-    printf("Result : %d/%lu (%d%)\n", score, input->rows, 100 * score / (int)input->rows);
+    printf("Result : %d/%lu (%d%%)\n", score, input->rows, 100 * score / (int)input->rows);
 }
