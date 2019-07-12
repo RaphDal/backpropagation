@@ -45,6 +45,8 @@ size_t training_size)
         cost += -output[j] * logf(network->output->a->matrix[0][j + 1]) -
         (1 - output[j]) * logf(1 - network->output->a->matrix[0][j + 1]);
     }
+    if (isnan(cost) || isinf(cost))
+        return (0);
     return (cost / (float)training_size);
 }
 
